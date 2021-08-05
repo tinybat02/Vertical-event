@@ -789,11 +789,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ "../node_modules/tslib/tslib.es6.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _components_VerticalLine__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./components/VerticalLine */ "./components/VerticalLine.tsx");
-/* harmony import */ var _style_main_css__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./style/main.css */ "./style/main.css");
-/* harmony import */ var _style_main_css__WEBPACK_IMPORTED_MODULE_3___default = /*#__PURE__*/__webpack_require__.n(_style_main_css__WEBPACK_IMPORTED_MODULE_3__);
+/* harmony import */ var _util_process__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./util/process */ "./util/process.ts");
+/* harmony import */ var _components_VerticalLine__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./components/VerticalLine */ "./components/VerticalLine.tsx");
+/* harmony import */ var _style_main_css__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./style/main.css */ "./style/main.css");
+/* harmony import */ var _style_main_css__WEBPACK_IMPORTED_MODULE_4___default = /*#__PURE__*/__webpack_require__.n(_style_main_css__WEBPACK_IMPORTED_MODULE_4__);
 
- // import { processData } from './util/process';
+
 
 
 
@@ -806,20 +807,45 @@ function (_super) {
   function MainPanel() {
     var _this = _super !== null && _super.apply(this, arguments) || this;
 
-    _this.state = {};
+    _this.state = {
+      data: []
+    };
     return _this;
   }
 
-  MainPanel.prototype.componentDidMount = function () {};
+  MainPanel.prototype.componentDidMount = function () {
+    var series = this.props.data.series;
+    if (series.length == 0) return;
+    var data = Object(_util_process__WEBPACK_IMPORTED_MODULE_2__["processData"])(series, this.props.options.order).data;
+    this.setState({
+      data: data
+    });
+  };
 
   MainPanel.prototype.componentDidUpdate = function (prevProps) {
-    if (prevProps.data.series !== this.props.data.series) {}
+    if (prevProps.data.series !== this.props.data.series) {
+      var series = this.props.data.series;
+
+      if (series.length == 0) {
+        this.setState({
+          data: []
+        });
+        return;
+      }
+
+      var data = Object(_util_process__WEBPACK_IMPORTED_MODULE_2__["processData"])(series, this.props.options.order).data;
+      this.setState({
+        data: data
+      });
+    }
   };
 
   MainPanel.prototype.render = function () {
     var _a = this.props,
         width = _a.width,
         height = _a.height;
+    var data = this.state.data;
+    if (!data.length) return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, "No Data");
     return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", {
       className: "main-container",
       style: {
@@ -827,7 +853,9 @@ function (_super) {
         height: height,
         overflowY: 'auto'
       }
-    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_VerticalLine__WEBPACK_IMPORTED_MODULE_2__["default"], null));
+    }, react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement(_components_VerticalLine__WEBPACK_IMPORTED_MODULE_3__["default"], {
+      eventData: data
+    }));
   };
 
   return MainPanel;
@@ -856,9 +884,7 @@ var VerticalItem = function VerticalItem(_a) {
     className: "line-item"
   }, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
     className: "label"
-  }, data.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("span", {
-    className: "date"
-  }, data.time), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, data.text));
+  }, data.label), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("p", null, "IN " + data["in"] + "  |  OUT " + data.out));
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (VerticalItem);
@@ -876,17 +902,16 @@ var VerticalItem = function VerticalItem(_a) {
 __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "react");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _data__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../data */ "./data.tsx");
-/* harmony import */ var _VerticalItem__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./VerticalItem */ "./components/VerticalItem.tsx");
+/* harmony import */ var _VerticalItem__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./VerticalItem */ "./components/VerticalItem.tsx");
 
 
 
-
-var VerticalLine = function VerticalLine() {
+var VerticalLine = function VerticalLine(_a) {
+  var eventData = _a.eventData;
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("section", {
     className: "line-container"
-  }, _data__WEBPACK_IMPORTED_MODULE_1__["default"].map(function (data, idx) {
-    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_VerticalItem__WEBPACK_IMPORTED_MODULE_2__["default"], {
+  }, eventData.map(function (data, idx) {
+    return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_VerticalItem__WEBPACK_IMPORTED_MODULE_1__["default"], {
       data: data,
       key: idx
     });
@@ -894,39 +919,6 @@ var VerticalLine = function VerticalLine() {
 };
 
 /* harmony default export */ __webpack_exports__["default"] = (VerticalLine);
-
-/***/ }),
-
-/***/ "./data.tsx":
-/*!******************!*\
-  !*** ./data.tsx ***!
-  \******************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony default export */ __webpack_exports__["default"] = ([{
-  text: 'IN - 10 | OUT 5',
-  time: 'August 03 2021',
-  label: 'Station A'
-}, {
-  text: 'IN - 20 | OUT 15',
-  time: 'August 03 2021',
-  label: 'Station B'
-}, {
-  text: 'IN - 20 | OUT 15',
-  time: 'August 03 2021',
-  label: 'Station C'
-}, {
-  text: 'IN - 2 | OUT 1',
-  time: 'August 03 2021',
-  label: 'Station D'
-}, {
-  text: 'IN - 5 | OUT 12',
-  time: 'August 03 2021',
-  label: 'Station E'
-}]);
 
 /***/ }),
 
@@ -995,7 +987,49 @@ module.exports = exported;
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "defaults", function() { return defaults; });
-var defaults = {};
+var defaults = {
+  order: []
+};
+
+/***/ }),
+
+/***/ "./util/process.ts":
+/*!*************************!*\
+  !*** ./util/process.ts ***!
+  \*************************/
+/*! exports provided: processData */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "processData", function() { return processData; });
+var processData = function processData(series, order) {
+  var obj = {};
+  series.map(function (serie) {
+    var sum = serie.fields[0].values.buffer.reduce(function (i, total) {
+      return i + total;
+    }, 0);
+    var raw_name = serie.name || '';
+    var name = raw_name.startsWith('_') ? raw_name.substring(1) : raw_name;
+    if (!obj[name]) obj[name] = {
+      label: name
+    };
+    if (raw_name.startsWith('_')) obj[name].out = sum;else obj[name]["in"] = sum;
+  });
+  if (order.length == 0) return {
+    data: Object.values(obj)
+  };
+  var dataList = order.map(function (label) {
+    if (obj[label]) return obj[label];else return {
+      label: label,
+      "in": 0,
+      out: 0
+    };
+  });
+  return {
+    data: dataList
+  };
+};
 
 /***/ }),
 

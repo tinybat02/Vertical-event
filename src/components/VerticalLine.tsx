@@ -1,8 +1,8 @@
 import React from 'react';
-import eventData from '../data';
+import { ItemData } from 'types';
 import VerticalItem from './VerticalItem';
 
-const VerticalLine = () => {
+const VerticalLine = ({ eventData }: { eventData: ItemData[] }) => {
   return (
     <section className="line-container">
       {eventData.map((data, idx) => (
